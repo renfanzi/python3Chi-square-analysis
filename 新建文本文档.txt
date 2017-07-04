@@ -1,0 +1,43 @@
+class myChiSquare2way():
+    def __init__(self):
+        pass
+
+    def run(self, v1, v2):
+        intSumV1 = sum(v1)  # 每个数组的总和
+        intSumV2 = sum(v2)
+        intSum = intSumV1 + intSumV2
+        pValue = 0
+        try:
+            if (len(v1) == len(v2)):
+                df = (len(v1) - 1) * (2 - 1)
+
+                for i in range(len(v1)):
+                    intsub_sum_v1_v2 = v1[i] + v2[i]
+
+                    floatTheoreticalFrequency1 = intSumV1 * intsub_sum_v1_v2 / float(intSum)  # 理论频率 E11等
+                    floatTheoreticalFrequency2 = intSumV2 * intsub_sum_v1_v2 / float(intSum)  # 理论频率 E11等
+
+                    floatSubP1Value = (v1[i] - floatTheoreticalFrequency1) * (
+                    v1[i] - floatTheoreticalFrequency1) / floatTheoreticalFrequency1
+                    floatSubP2Value = (v2[i] - floatTheoreticalFrequency2) * (
+                    v2[i] - floatTheoreticalFrequency2) / floatTheoreticalFrequency2
+
+                    pValue = pValue + floatSubP1Value + floatSubP2Value
+            else:
+                pValue = 0
+                df = 0
+            P = chisqprob(pValue, df)
+        except Exception as e:
+            my_log.error(e)
+            df = 0
+            P = 0
+            intSum = 0
+            pValue = 0
+
+        return {"chisq": pValue, "df": df, "N": intSum, "p": P}
+
+
+def do_chisquare2way(v1, v2):
+    x2 = myChiSquare2way()
+    x3 = x2.run(v1, v2)
+    return {'p': x3['p'], 'df': x3['df'], 'chisq': x3['chisq'], 'N': x3['N']}
